@@ -1,3 +1,10 @@
+<script setup>
+    useHead({
+        title: "Register | PowerHuman",
+        meta: [{ name: "description", content: "Register page" }],
+    });
+</script>
+
 <template>
     <div>
         <section

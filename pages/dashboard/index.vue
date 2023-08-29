@@ -2,6 +2,11 @@
     definePageMeta({
         layout: "dashboard",
     });
+
+    useHead({
+        title: "Overview | PowerHuman",
+        meta: [{ name: "description", content: "Overview page" }],
+    });
 </script>
 
 <template>

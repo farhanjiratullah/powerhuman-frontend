@@ -1,3 +1,10 @@
+<script setup>
+    useHead({
+        title: "Login | PowerHuman",
+        meta: [{ name: "description", content: "Login page" }],
+    });
+</script>
+
 <template>
     <div>
         <section
