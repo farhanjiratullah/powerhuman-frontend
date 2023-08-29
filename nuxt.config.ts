@@ -7,6 +7,10 @@ export default defineNuxtConfig({
             apiBase: "",
         },
     },
+    vue: {
+        defineModel: true,
+        propsDestructure: true,
+    },
     routeRules: {
         "/": { redirect: { to: "login" } },
     },
