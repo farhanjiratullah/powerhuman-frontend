@@ -30,6 +30,26 @@
     .btn-primary {
         @apply bg-primary text-white;
     }
+
+    .btn-secondary {
+        @apply bg-secondary text-white;
+    }
+
+    .btn-grey {
+        @apply bg-grey text-white;
+    }
+
+    .btn-dark {
+        @apply bg-dark text-white;
+    }
+
+    .btn-page {
+        @apply bg-page text-white;
+    }
+
+    .btn-success {
+        @apply bg-success text-white;
+    }
 }
 
 @layer utilities {
