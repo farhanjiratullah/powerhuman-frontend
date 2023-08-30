@@ -50,10 +50,13 @@
                         <img src="/svgs/ic-briefcase.svg" alt="" />
                         My Teams
                     </MyNuxtLink>
-                    <a href="roles.html" class="nav-link">
+                    <MyNuxtLink
+                        :to="{ name: 'dashboard-roles' }"
+                        class="nav-link"
+                    >
                         <img src="/svgs/ic-flag.svg" alt="" />
                         Roles
-                    </a>
+                    </MyNuxtLink>
                 </div>
                 <div class="flex flex-col gap-4">
                     <div class="text-sm text-grey">Others</div>
