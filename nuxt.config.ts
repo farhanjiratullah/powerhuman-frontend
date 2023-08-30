@@ -7,5 +7,19 @@ export default defineNuxtConfig({
             apiBase: "",
         },
     },
+    vue: {
+        defineModel: true,
+        propsDestructure: true,
+    },
+    routeRules: {
+        "/": { redirect: { to: "login" } },
+    },
     modules: ["@pinia/nuxt"],
+    postcss: {
+        plugins: {
+            tailwindcss: {},
+            autoprefixer: {},
+        },
+    },
+    css: ["~/assets/css/main.css"],
 });
