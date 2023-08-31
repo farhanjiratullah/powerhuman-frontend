@@ -1,12 +1,26 @@
 <script setup>
+    import { useAuthStore } from "~/stores/auth";
+
+    definePageMeta({
+        middleware: "guest",
+    });
+
     useHead({
         title: "Login | PowerHuman",
         meta: [{ name: "description", content: "Login page" }],
     });
+
+    const form = ref({
+        email: null,
+        password: null,
+    });
+
+    const auth = useAuthStore();
 </script>
 
 <template>
     <div>
+        <pre>{{ auth.user }}</pre>
         <section
             class="py-[50px] flex flex-col items-center justify-center px-4"
         >
@@ -18,21 +32,30 @@
                 Manage your employees to achieve <br />
                 a bigger goals for your company
             </p>
-            <form class="w-full card">
+            <form class="w-full card" @submit.prevent="auth.handleLogin(form)">
                 <div class="form-group">
-                    <label for="" class="text-grey">Email Address</label>
-                    <input type="email" class="input-field" />
+                    <label for="email" class="text-grey">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="input-field"
+                        v-model="form.email"
+                    />
                 </div>
                 <div class="form-group">
-                    <label for="" class="text-grey">Password</label>
-                    <input type="password" class="input-field" />
+                    <label for="password" class="text-grey">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="input-field"
+                        v-model="form.password"
+                    />
                 </div>
-                <a href="index.html" class="w-full btn btn-primary mt-[14px]">
+                <button type="submit" class="w-full btn btn-primary mt-[14px]">
                     Sign In
-                </a>
-                <!-- <button type="button" class="w-full btn btn-primary mt-[14px]">
-                Sign In
-            </button> -->
+                </button>
             </form>
         </section>
     </div>
