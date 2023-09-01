@@ -59,10 +59,6 @@ export const useAuthStore = defineStore(
                 formData.append("company[name]", form.company.name);
                 formData.append("company[logo]", form.company.logo);
 
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
-                }
-
                 loading.value = true;
                 const { data, error, status } = await useFetch(
                     `${useRuntimeConfig().public.apiBase}/register`,
