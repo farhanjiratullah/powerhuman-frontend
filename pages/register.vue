@@ -1,9 +1,9 @@
 <script setup>
     import { useAuthStore } from "~/stores/auth";
 
-    definePageMeta({
-        middleware: "guest",
-    });
+    // definePageMeta({
+    //     middleware: "guest",
+    // });
 
     useHead({
         title: "Register | PowerHuman",
