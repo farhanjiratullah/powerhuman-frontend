@@ -1,9 +1,12 @@
 export const useAuthStore = defineStore(
     "auth",
     () => {
+        const router = useRouter();
+
         const accessToken = useCookie("accessToken", {
             maxAge: 60 * 60,
         });
+        const intendedRoute = useCookie("intendedRoute");
 
         const authUser = ref(null);
         const loading = ref(false);
@@ -32,8 +35,16 @@ export const useAuthStore = defineStore(
 
                     accessToken.value = data?.value?.data?.token?.access_token;
 
+                    intendedRoute.value = intendedRoute.value || "/dashboard";
+
+                    const resolvedRoute = router.resolve({
+                        path: intendedRoute.value,
+                    });
+
+                    intendedRoute.value = "";
+
                     return navigateTo(
-                        { name: "dashboard" },
+                        { name: resolvedRoute.name },
                         {
                             replace: true,
                         }
