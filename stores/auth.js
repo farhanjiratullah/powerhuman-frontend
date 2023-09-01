@@ -46,6 +46,58 @@ export const useAuthStore = defineStore(
             }
         };
 
+        const handleRegister = async (form, errors) => {
+            try {
+                const formData = new FormData();
+                formData.append("name", form.name);
+                formData.append("email", form.email);
+                formData.append("password", form.password);
+                formData.append(
+                    "password_confirmation",
+                    form.password_confirmation
+                );
+                formData.append("company[name]", form.company.name);
+                formData.append("company[logo]", form.company.logo);
+
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+
+                loading.value = true;
+                const { data, error, status } = await useFetch(
+                    `${useRuntimeConfig().public.apiBase}/register`,
+                    {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            Accept: "application/json",
+                        },
+                    }
+                );
+
+                if (status.value === "error") {
+                    errors.value = error.value.data.errors;
+                }
+
+                if (status.value === "success") {
+                    authUser.value = data?.value?.data?.user;
+
+                    accessToken.value = data?.value?.data?.token?.access_token;
+
+                    return navigateTo(
+                        { name: "dashboard" },
+                        {
+                            replace: true,
+                        }
+                    );
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                loading.value = false;
+            }
+        };
+
         // const fetchUser = async () => {
         //     try {
         //         const { data, error, status } = await useCustomFetch("/user", {
@@ -72,6 +124,7 @@ export const useAuthStore = defineStore(
             isLoggedIn,
             isLoading,
             handleLogin,
+            handleRegister,
             // fetchUser,
         };
     },
