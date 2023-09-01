@@ -2,12 +2,15 @@ export const useAuthStore = defineStore(
     "auth",
     () => {
         const authUser = ref(null);
+        const loading = ref(false);
 
         const user = computed(() => authUser.value);
         const isLoggedIn = computed(() => authUser.value !== null);
+        const isLoading = computed(() => loading.value);
 
-        const handleLogin = async (form) => {
+        const handleLogin = async (form, errors) => {
             try {
+                loading.value = true;
                 const { data, error, status } = await useCustomFetch("/login", {
                     method: "POST",
                     body: {
@@ -15,6 +18,10 @@ export const useAuthStore = defineStore(
                         password: form.password,
                     },
                 });
+
+                if (status.value === "error") {
+                    errors.value = error.value.data.errors;
+                }
 
                 if (status.value === "success") {
                     authUser.value = data?.value?.data?.user;
@@ -33,6 +40,8 @@ export const useAuthStore = defineStore(
                 }
             } catch (error) {
                 console.error(error);
+            } finally {
+                loading.value = false;
             }
         };
 
@@ -57,8 +66,10 @@ export const useAuthStore = defineStore(
 
         return {
             authUser,
+            loading,
             user,
             isLoggedIn,
+            isLoading,
             handleLogin,
             // fetchUser,
         };

@@ -15,12 +15,13 @@
         password: null,
     });
 
+    const errors = ref({});
+
     const auth = useAuthStore();
 </script>
 
 <template>
     <div>
-        <pre>{{ auth.user }}</pre>
         <section
             class="py-[50px] flex flex-col items-center justify-center px-4"
         >
@@ -32,7 +33,11 @@
                 Manage your employees to achieve <br />
                 a bigger goals for your company
             </p>
-            <form class="w-full card" @submit.prevent="auth.handleLogin(form)">
+            <pre>{{ auth.isLoading }}</pre>
+            <form
+                class="w-full card"
+                @submit.prevent="auth.handleLogin(form, errors)"
+            >
                 <div class="form-group">
                     <label for="email" class="text-grey">Email Address</label>
                     <input
@@ -42,6 +47,11 @@
                         class="input-field"
                         v-model="form.email"
                     />
+                    <div v-if="errors?.value?.email">
+                        <p class="text-red-500">
+                            {{ errors?.value?.email[0] }}
+                        </p>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="password" class="text-grey">Password</label>
@@ -52,9 +62,18 @@
                         class="input-field"
                         v-model="form.password"
                     />
+                    <div v-if="errors?.value?.password">
+                        <p class="text-red-500">
+                            {{ errors?.value?.password[0] }}
+                        </p>
+                    </div>
                 </div>
-                <button type="submit" class="w-full btn btn-primary mt-[14px]">
-                    Sign In
+                <button
+                    type="submit"
+                    :disabled="auth.isLoading"
+                    class="w-full btn btn-primary mt-[14px] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {{ auth.isLoading ? "Loading..." : "Sign In" }}
                 </button>
             </form>
         </section>
