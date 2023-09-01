@@ -33,7 +33,6 @@
                 Manage your employees to achieve <br />
                 a bigger goals for your company
             </p>
-            <pre>{{ auth.isLoading }}</pre>
             <form
                 class="w-full card"
                 @submit.prevent="auth.handleLogin(form, errors)"

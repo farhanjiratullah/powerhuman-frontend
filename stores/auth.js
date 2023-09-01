@@ -1,6 +1,10 @@
 export const useAuthStore = defineStore(
     "auth",
     () => {
+        const accessToken = useCookie("accessToken", {
+            maxAge: 60 * 60,
+        });
+
         const authUser = ref(null);
         const loading = ref(false);
 
@@ -26,10 +30,7 @@ export const useAuthStore = defineStore(
                 if (status.value === "success") {
                     authUser.value = data?.value?.data?.user;
 
-                    localStorage.setItem(
-                        "accessToken",
-                        data?.value?.data?.token?.access_token
-                    );
+                    accessToken.value = data?.value?.data?.token?.access_token;
 
                     return navigateTo(
                         { name: "dashboard" },
