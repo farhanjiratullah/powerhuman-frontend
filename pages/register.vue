@@ -60,6 +60,7 @@
             <form
                 class="w-full card"
                 @submit.prevent="auth.handleRegister(form, errors)"
+                method="POST"
                 enctype="multipart/form-data"
             >
                 <div class="form-group">

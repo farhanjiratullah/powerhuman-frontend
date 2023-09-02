@@ -36,6 +36,7 @@
             <form
                 class="w-full card"
                 @submit.prevent="auth.handleLogin(form, errors)"
+                method="POST"
             >
                 <div class="form-group">
                     <label for="email" class="text-grey">Email Address</label>
