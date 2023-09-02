@@ -68,10 +68,13 @@
                         <img src="/svgs/ic-box.svg" alt="" />
                         Insurances
                     </a>
-                    <a href="#" class="nav-link">
+                    <MyNuxtLink
+                        :to="{ name: 'dashboard-companies' }"
+                        class="nav-link"
+                    >
                         <img src="/svgs/ic-home.svg" alt="" />
                         Company
-                    </a>
+                    </MyNuxtLink>
                     <a href="#" class="nav-link">
                         <img src="/svgs/ic-gift.svg" alt="" />
                         Rewards
