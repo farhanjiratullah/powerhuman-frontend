@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+    const auth = useAuthStore();
+</script>
 
 <template>
     <div>
@@ -78,10 +80,13 @@
                         <img src="/svgs/ic-settings.svg" alt="" />
                         Settings
                     </a>
-                    <a href="#" class="nav-link">
+                    <MyNuxtLink
+                        @click.prevent="auth.handleLogout"
+                        class="nav-link cursor-pointer"
+                    >
                         <img src="/svgs/ic-signout.svg" alt="" />
                         Logout
-                    </a>
+                    </MyNuxtLink>
                 </div>
             </div>
         </div>

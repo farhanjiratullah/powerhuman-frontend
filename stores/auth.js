@@ -105,24 +105,30 @@ export const useAuthStore = defineStore(
             }
         };
 
-        // const fetchUser = async () => {
-        //     try {
-        //         const { data, error, status } = await useCustomFetch("/user", {
-        //             method: "GET",
-        //             headers: {
-        //                 Authorization: `Bearer ${localStorage.getItem(
-        //                     "accessToken"
-        //                 )}`,
-        //             },
-        //         });
+        const handleLogout = async () => {
+            try {
+                const { error, status } = await useCustomFetch("/logout", {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${accessToken.value}`,
+                    },
+                });
 
-        //         if (status.value === "success") {
-        //             authUser.value = data?.value?.data;
-        //         }
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // };
+                if (status.value === "success") {
+                    authUser.value = null;
+                    accessToken.value = null;
+
+                    return navigateTo(
+                        { name: "login" },
+                        {
+                            replace: true,
+                        }
+                    );
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
         return {
             authUser,
@@ -132,7 +138,7 @@ export const useAuthStore = defineStore(
             isLoading,
             handleLogin,
             handleRegister,
-            // fetchUser,
+            handleLogout,
         };
     },
     {
