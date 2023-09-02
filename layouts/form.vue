@@ -1,7 +1,16 @@
 <script setup>
     const router = useRouter();
+    const route = useRoute();
 
-    const previousPage = () => router.back();
+    const previousSegment = () => {
+        const splitted = route.path.substring(1).split("/");
+        const popped = splitted.pop();
+        const joined = `/${splitted.join("/")}`;
+
+        const resolvedRoute = router.resolve({ path: joined });
+
+        return navigateTo({ name: resolvedRoute.name });
+    };
 </script>
 
 <template>
@@ -12,7 +21,7 @@
             <NuxtLink :to="{ name: 'dashboard' }">
                 <img src="/svgs/logo-type.svg" alt="" />
             </NuxtLink>
-            <a @click="previousPage" class="cursor-pointer">
+            <a @click="previousSegment" class="cursor-pointer">
                 <img src="/svgs/ric-close-white.svg" alt="" />
             </a>
         </div>
