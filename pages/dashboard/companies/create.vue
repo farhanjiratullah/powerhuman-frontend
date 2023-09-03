@@ -54,8 +54,32 @@
                 method="POST"
                 enctype="multipart/form-data"
             >
+                <div class="mb-[2px] mx-auto" v-if="form.logo">
+                    <img
+                        :src="logoPreview"
+                        alt="Logo Preview"
+                        class="w-[70px]"
+                    />
+                </div>
                 <div class="form-group">
-                    <label for="company-name" class="text-grey">Name</label>
+                    <label for="logo" class="text-grey">Logo</label>
+                    <input
+                        type="file"
+                        name="logo"
+                        id="logo"
+                        @change="handleFileChange"
+                        class="input-field"
+                    />
+                    <div v-if="errors?.value?.logo">
+                        <p class="text-red-500">
+                            {{ errors?.value?.logo[0] }}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="company-name" class="text-grey"
+                        >Name <span class="text-red-500">*</span></label
+                    >
                     <input
                         type="text"
                         name="company-name"
@@ -69,27 +93,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="logo" class="text-grey">Logo</label>
-                    <input
-                        type="file"
-                        name="logo"
-                        id="logo"
-                        @change="handleFileChange"
-                        class="input-field"
-                    />
-                    <img
-                        v-if="form.logo"
-                        :src="logoPreview"
-                        alt="Logo Preview"
-                        class="w-[100px]"
-                    />
-                    <div v-if="errors?.value?.logo">
-                        <p class="text-red-500">
-                            {{ errors?.value?.logo[0] }}
-                        </p>
-                    </div>
-                </div>
+
                 <button
                     type="submit"
                     class="w-full btn btn-primary mt-[14px] disabled:opacity-50 disabled:cursor-not-allowed"
