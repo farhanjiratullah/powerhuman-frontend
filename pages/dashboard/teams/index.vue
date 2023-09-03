@@ -7,6 +7,41 @@
         title: "Teams | PowerHuman",
         meta: [{ name: "description", content: "Teams page" }],
     });
+
+    const config = useRuntimeConfig();
+    const accessToken = useCookie("accessToken");
+
+    const search = ref("");
+
+    const createDebounce = (delayMs) => {
+        let timeout = null;
+
+        return (fnc) => {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                fnc();
+            }, delayMs);
+        };
+    };
+
+    const debounceSearch = createDebounce(1000);
+
+    const { data: teams, pending } = await useLazyFetch(
+        `${useRuntimeConfig().public.apiBase}/teams`,
+        {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken.value}`,
+            },
+            params: {
+                search: search,
+            },
+            transform: (teams) => teams.data.data,
+            watch: [search],
+        }
+    );
 </script>
 
 <template>
@@ -37,8 +72,15 @@
                 <form class="shrink md:w-[516px] w-full">
                     <input
                         type="text"
-                        name=""
-                        id=""
+                        name="search"
+                        id="search"
+                        :value="search"
+                        @input="
+                            ($event) =>
+                                debounceSearch(
+                                    () => (search = $event.target.value)
+                                )
+                        "
                         class="input-field !outline-none !border-none italic form-icon-search ring-indigo-200 focus:ring-2 transition-all duration-300 w-full"
                         placeholder="Search people, team, project"
                     />
@@ -75,45 +117,31 @@
             <div
                 class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-10 lg:gap-3"
             >
-                <div
-                    class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
-                >
-                    <a
-                        href="#"
-                        class="absolute inset-0 hover:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-box.svg" alt="" />
-                    <div class="mt-6 mb-1 font-semibold text-center text-dark">
-                        Growth Marketing
+                <div v-if="pending">Loading...</div>
+                <template v-else>
+                    <div
+                        class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
+                        v-for="team in teams"
+                        :key="team.id"
+                    >
+                        <a
+                            href="#"
+                            class="absolute inset-0 hover:ring-2 ring-primary rounded-[26px]"
+                        ></a>
+                        <img
+                            :src="`${config.public.baseUrl}/storage/${team.icon}`"
+                            :alt="team.name"
+                        />
+                        <div
+                            class="mt-6 mb-1 font-semibold text-center text-dark"
+                        >
+                            {{ team.name }}
+                        </div>
+                        <p class="text-center text-grey">
+                            {{ team.employees_count }} People
+                        </p>
                     </div>
-                    <p class="text-center text-grey">12 People</p>
-                </div>
-                <div
-                    class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
-                >
-                    <a
-                        href="#"
-                        class="absolute inset-0 hover:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-target.svg" alt="" />
-                    <div class="mt-6 mb-1 font-semibold text-center text-dark">
-                        User Growth
-                    </div>
-                    <p class="text-center text-grey">5,312 People</p>
-                </div>
-                <div
-                    class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
-                >
-                    <a
-                        href="#"
-                        class="absolute inset-0 hover:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-award.svg" alt="" />
-                    <div class="mt-6 mb-1 font-semibold text-center text-dark">
-                        Gamification
-                    </div>
-                    <p class="text-center text-grey">893 People</p>
-                </div>
+                </template>
             </div>
         </section>
     </div>

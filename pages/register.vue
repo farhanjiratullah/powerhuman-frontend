@@ -63,8 +63,33 @@
                 method="POST"
                 enctype="multipart/form-data"
             >
+                <div class="mb-[2px] mx-auto" v-if="form.company.logo">
+                    <img
+                        :src="logoPreview"
+                        alt="Logo Preview"
+                        class="w-[70px]"
+                    />
+                </div>
                 <div class="form-group">
-                    <label for="name" class="text-grey">Name</label>
+                    <label for="logo" class="text-grey">Logo</label>
+                    <input
+                        type="file"
+                        name="logo"
+                        id="logo"
+                        @change="handleFileChange"
+                        class="input-field"
+                    />
+
+                    <div v-if="errors?.value?.company.logo">
+                        <p class="text-red-500">
+                            {{ errors?.value?.company.logo[0] }}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="text-grey"
+                        >Name <span class="text-red-500">*</span></label
+                    >
                     <input
                         type="text"
                         name="name"
@@ -79,7 +104,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="text-grey">Email Address</label>
+                    <label for="email" class="text-grey"
+                        >Email Address
+                        <span class="text-red-500">*</span></label
+                    >
                     <input
                         type="email"
                         name="email"
@@ -94,7 +122,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="text-grey">Password</label>
+                    <label for="password" class="text-grey"
+                        >Password <span class="text-red-500">*</span></label
+                    >
                     <input
                         type="password"
                         name="password"
@@ -110,7 +140,8 @@
                 </div>
                 <div class="form-group">
                     <label for="password_confirmation" class="text-grey"
-                        >Password Confirmation</label
+                        >Password Confirmation
+                        <span class="text-red-500">*</span></label
                     >
                     <input
                         type="password"
@@ -122,7 +153,7 @@
                 </div>
                 <div class="form-group">
                     <label for="company-name" class="text-grey"
-                        >Company Name</label
+                        >Company Name <span class="text-red-500">*</span></label
                     >
                     <input
                         type="text"
@@ -137,27 +168,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="logo" class="text-grey">Logo</label>
-                    <input
-                        type="file"
-                        name="logo"
-                        id="logo"
-                        @change="handleFileChange"
-                        class="input-field"
-                    />
-                    <img
-                        v-if="form.company.logo"
-                        :src="logoPreview"
-                        alt="Logo Preview"
-                        class="w-[100px]"
-                    />
-                    <div v-if="errors?.value?.company.logo">
-                        <p class="text-red-500">
-                            {{ errors?.value?.company.logo[0] }}
-                        </p>
-                    </div>
-                </div>
+
                 <button
                     type="submit"
                     :disabled="auth.isLoading"
