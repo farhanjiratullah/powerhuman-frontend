@@ -7,6 +7,41 @@
         title: "Roles | PowerHuman",
         meta: [{ name: "description", content: "Roles page" }],
     });
+
+    const config = useRuntimeConfig();
+    const accessToken = useCookie("accessToken");
+
+    const search = ref("");
+
+    const createDebounce = (delayMs) => {
+        let timeout = null;
+
+        return (fnc) => {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                fnc();
+            }, delayMs);
+        };
+    };
+
+    const debounceSearch = createDebounce(1000);
+
+    const { data: roles, pending } = await useLazyFetch(
+        `${useRuntimeConfig().public.apiBase}/roles`,
+        {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken.value}`,
+            },
+            params: {
+                search: search,
+            },
+            transform: (roles) => roles.data.data,
+            watch: [search],
+        }
+    );
 </script>
 
 <template>
@@ -39,8 +74,15 @@
                 <form class="shrink md:w-[516px] w-full">
                     <input
                         type="text"
-                        name=""
-                        id=""
+                        name="search"
+                        id="search"
+                        :value="search"
+                        @input="
+                            ($event) =>
+                                debounceSearch(
+                                    () => (search = $event.target.value)
+                                )
+                        "
                         class="input-field !outline-none !border-none italic form-icon-search ring-indigo-200 focus:ring-2 transition-all duration-300 w-full"
                         placeholder="Search people, team, project"
                     />
@@ -75,71 +117,28 @@
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-                <div class="items-center card !flex-row gap-4">
-                    <a
-                        href="#"
-                        class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-flag.svg" alt="" />
-                    <div>
-                        <div class="mb-1 font-semibold text-dark">
-                            Product Designer
+                <div v-if="pending">Loading...</div>
+                <template v-else>
+                    <div
+                        class="items-center card !flex-row gap-4"
+                        v-for="role in roles"
+                        :key="role.id"
+                    >
+                        <a
+                            href="#"
+                            class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
+                        ></a>
+                        <img src="/svgs/ric-flag.svg" alt="Icon Role" />
+                        <div>
+                            <div class="mb-1 font-semibold text-dark">
+                                {{ role.name }}
+                            </div>
+                            <p class="text-grey">
+                                {{ role.employees_count }} people assigned
+                            </p>
                         </div>
-                        <p class="text-grey">12 people assigned</p>
                     </div>
-                </div>
-                <div class="items-center card !flex-row gap-4">
-                    <a
-                        href="#"
-                        class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-flag.svg" alt="" />
-                    <div>
-                        <div class="mb-1 font-semibold text-dark">
-                            iOS Engineer
-                        </div>
-                        <p class="text-grey">12 people assigned</p>
-                    </div>
-                </div>
-                <div class="items-center card !flex-row gap-4">
-                    <a
-                        href="#"
-                        class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-flag.svg" alt="" />
-                    <div>
-                        <div class="mb-1 font-semibold text-dark">
-                            Marketing
-                        </div>
-                        <p class="text-grey">12 people assigned</p>
-                    </div>
-                </div>
-                <div class="items-center card !flex-row gap-4">
-                    <a
-                        href="#"
-                        class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-flag.svg" alt="" />
-                    <div>
-                        <div class="mb-1 font-semibold text-dark">
-                            DevOps Power
-                        </div>
-                        <p class="text-grey">12 people assigned</p>
-                    </div>
-                </div>
-                <div class="items-center card !flex-row gap-4">
-                    <a
-                        href="#"
-                        class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-                    ></a>
-                    <img src="/svgs/ric-flag.svg" alt="" />
-                    <div>
-                        <div class="mb-1 font-semibold text-dark">
-                            Quality Assurance
-                        </div>
-                        <p class="text-grey">12 people assigned</p>
-                    </div>
-                </div>
+                </template>
             </div>
         </section>
     </div>

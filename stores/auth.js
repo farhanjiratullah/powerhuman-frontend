@@ -27,7 +27,7 @@ export const useAuthStore = defineStore(
                 });
 
                 if (status.value === "error") {
-                    errors.value = error.value.data.errors;
+                    errors.value = error?.value?.data?.errors;
                 }
 
                 if (status.value === "success") {
