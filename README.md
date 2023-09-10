@@ -1,4 +1,4 @@
-# Zullkit
+# PowerHuman
 Kelas Rekaman Bootcamp Full-Stack Web Developer: Laravel Vue Nuxt JS Website HRIS
 =======
 
